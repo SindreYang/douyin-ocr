@@ -55,7 +55,7 @@ def params2str(params):
     >>> print(params2str({'a':1, 'b':1}))
     a=1&b=1
     '''
-    return "&".join(["%s=%s" % (k, v) for k, v in params.items()])
+    return "&".join([f"{k}={v}" for k, v in params.items()])
 
 
 def mixString(pwd):
@@ -72,7 +72,7 @@ def user_input(msg, choices=[], default='', retries=3):
     if len(res) == 0:
         return default
     if choices and res not in choices:
-        if retries-1 <= 0:
+        if retries <= 1:
             print("Byebye! Stubborn man!")
             exit(-1)
         print(f'Choose one of {choices}, please!', end=' ')
@@ -220,21 +220,21 @@ class AsyncDownloader(object):
       os.makedirs(save_dir)
       
   async def download_file(self, url, headers=IPHONE_HEADER, timeout=DOWNLOAD_TIMEOUT, res_time=RETRIES_TIMES):
-    if res_time <= 0: # 重试超过了次数
-        return None
-    try:
-        _url = random.choice(url) if isinstance(url, list) else url
-        res = await asks.get(_url, headers=headers, timeout=timeout, retries=3)
-    except (socket.gaierror, trio.BrokenResourceError, trio.TooSlowError, asks.errors.RequestTimeout) as e:
-        logging.error("download from %s fail]err=%s!" % (url, e))
-        await trio.sleep(random.randint(1, 5)) # for scheduler
-        return await self.download_file(url, res_time=res_time-1)
+      if res_time <= 0: # 重试超过了次数
+          return None
+      try:
+          _url = random.choice(url) if isinstance(url, list) else url
+          res = await asks.get(_url, headers=headers, timeout=timeout, retries=3)
+      except (socket.gaierror, trio.BrokenResourceError, trio.TooSlowError, asks.errors.RequestTimeout) as e:
+          logging.error(f"download from {url} fail]err={e}!")
+          await trio.sleep(random.randint(1, 5)) # for scheduler
+          return await self.download_file(url, res_time=res_time-1)
 
-    if res.status_code not in [200, 202]:
-        logging.warn(f"download from {url} fail]response={res}")
-        await trio.sleep(random.randint(3, 10))
-        return await self.download_file(url, res_time=res_time-1)
-    return res.content
+      if res.status_code not in [200, 202]:
+          logging.warn(f"download from {url} fail]response={res}")
+          await trio.sleep(random.randint(3, 10))
+          return await self.download_file(url, res_time=res_time-1)
+      return res.content
 
   def is_file_downloaded(self, name):
     file_path = os.path.join(self.save_dir, fname_normalize(name))

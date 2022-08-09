@@ -28,8 +28,11 @@ def pull_screenshot():
     global SCREENSHOT_WAY
     if 1 <= SCREENSHOT_WAY <= 3:
         process = subprocess.Popen(
-            adb.adb_path + ' shell screencap -p',
-            shell=True, stdout=subprocess.PIPE)
+            f'{adb.adb_path} shell screencap -p',
+            shell=True,
+            stdout=subprocess.PIPE,
+        )
+
         binary_screenshot = process.stdout.read()
         if SCREENSHOT_WAY == 2:
             binary_screenshot = binary_screenshot.replace(b'\r\n', b'\n')
@@ -59,7 +62,7 @@ def check_screenshot():
         im = pull_screenshot()
         im.load()
         im.close()
-        print('采用方式 {} 获取截图'.format(SCREENSHOT_WAY))
+        print(f'采用方式 {SCREENSHOT_WAY} 获取截图')
     except Exception:
         SCREENSHOT_WAY -= 1
         check_screenshot()

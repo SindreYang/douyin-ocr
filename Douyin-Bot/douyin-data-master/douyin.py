@@ -140,19 +140,14 @@ class DouyinTool(object):
     async def get_follow_list(self, user_id, offset=0, repeat_func=None):
         '''爬取指定用户的所有关注的用户列表 async for video in get_follow_list(uid): ...
         第二次post返回都是失败， post 缺少什么必要参数呢？'''
-        total = 0
         follow_list, hasmore, offset = await self._get_follow_list(user_id, offset)
         # print(len(follow_list), hasmore, offset)
         for follow in follow_list:
-          uid = follow.get('uid', None)
-          nickname = follow.get('nickname', '')
-          signature = follow.get('signature', '')
-          birthday = follow.get('birthday', '')
-          # if uid == '92654947278' or nickname == '已重置':
-          #     # 测试发现这个号并没有什么卵用，而且并不是关注的用户
-          #     continue
-          total += 1
-          yield {'user_id':uid, 'nickname':nickname, 'signature':signature, 'birthday':birthday,}
+            uid = follow.get('uid', None)
+            nickname = follow.get('nickname', '')
+            signature = follow.get('signature', '')
+            birthday = follow.get('birthday', '')
+            yield {'user_id':uid, 'nickname':nickname, 'signature':signature, 'birthday':birthday,}
 
     async def _get_video_list(self, url, user_id, max_cursor=0):
         '''获取视频列表
@@ -222,15 +217,14 @@ class DouyinTool(object):
             video_info = resp.json()
             play_addr_raw = video_info['aweme_detail']['video']['play_addr']['url_list']
             # 注意测试发现这个播放列表里前两个链接都是可以用的，下载的时候可以为了保险起见循环下载测试
-            return play_addr_raw[0:2]
+            return play_addr_raw[:2]
         except Exception as e:
             logging.error(f"parser video url fail from {url}!")
             return None
 
     async def _get_music_url(self, music_id):
         '''获取音频地址，可以直接使用 asks.get(music_url, verify=False, headers=IPHONE_HEADER, verify=False) 下载视频'''
-        url = f"https://p3.pstatp.com/obj/{music_id}"
-        return url
+        return f"https://p3.pstatp.com/obj/{music_id}"
 
     async def parse_video_info(self, video, repeat_func=None):
         '''解析视频关键信息
@@ -257,18 +251,16 @@ class DouyinTool(object):
             video_url = await self._get_video_url(aweme_id)
             # music_url = await self._get_music_url(music_id)
 
-        download_item = {
+        return {
             "author_name": author_name,
             "video_desc": video_desc,
             "author_uid": author_uid,
             # "music_id": music_id,
-            "aweme_id" : aweme_id,
-            "video_url" : video_url,
+            "aweme_id": aweme_id,
+            "video_url": video_url,
             # "music_url" : music_url,
-            "name" : name,
+            "name": name,
         }
-
-        return download_item
 
 
 async def _get_follow_list_test():

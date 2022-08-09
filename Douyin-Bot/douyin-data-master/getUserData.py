@@ -119,7 +119,7 @@ def subDouyinID(str):
   str = str.replace('</i>', '')
   # 将字体清洗为字符串
   for fontKey in mapList:
-    str = str.replace('&#' + fontKey + ';', mapList[fontKey])
+    str = str.replace(f'&#{fontKey};', mapList[fontKey])
   return str
 
 # 没有headers会返回页面不存在

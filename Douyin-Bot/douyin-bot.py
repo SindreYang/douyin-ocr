@@ -112,7 +112,7 @@ def main():
     main
     :return:
     """
-    print('程序版本号：{}'.format(VERSION))
+    print(f'程序版本号：{VERSION}')
     print('激活窗口并按 CONTROL + C 组合键退出')
     #调试
     debug.dump_device_info()
@@ -127,10 +127,10 @@ def main():
 
         resize_image('autojump.png', 'optimized.png', 1024*1024)
 
-        
 
-         
-         
+
+
+
         # n=random.randint(1,3)
         # print('n:',n)
         #

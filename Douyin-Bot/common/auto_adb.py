@@ -30,16 +30,14 @@ class auto_adb():
             exit(1)
 
     def get_screen(self):
-        process = os.popen(self.adb_path + ' shell wm size')
-        output = process.read()
-        return output
+        process = os.popen(f'{self.adb_path} shell wm size')
+        return process.read()
 
     def run(self, raw_command):
         print(raw_command)
-        command = '{} {}'.format(self.adb_path, raw_command)
+        command = f'{self.adb_path} {raw_command}'
         process = os.popen(command)
-        output = process.read()
-        return output
+        return process.read()
 
     def test_device(self):
         print('检查设备是否连接...')
@@ -58,19 +56,16 @@ class auto_adb():
             print(each.decode('utf8'))
 
     def test_density(self):
-        process = os.popen(self.adb_path + ' shell wm density')
-        output = process.read()
-        return output
+        process = os.popen(f'{self.adb_path} shell wm density')
+        return process.read()
 
     def test_device_detail(self):
-        process = os.popen(self.adb_path + ' shell getprop ro.product.device')
-        output = process.read()
-        return output
+        process = os.popen(f'{self.adb_path} shell getprop ro.product.device')
+        return process.read()
 
     def test_device_os(self):
-        process = os.popen(self.adb_path + ' shell getprop ro.build.version.release')
-        output = process.read()
-        return output
+        process = os.popen(f'{self.adb_path} shell getprop ro.build.version.release')
+        return process.read()
 
     def adb_path(self):
         return self.adb_path
