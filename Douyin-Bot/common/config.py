@@ -28,16 +28,16 @@ def open_accordant_config():
         if re.match(r'(.+)\.json', file):
             file_name = os.path.join(here, file)
             with open(file_name, 'r') as f:
-                print("Load config file from {}".format(file_name))
+                print(f"Load config file from {file_name}")
                 return json.load(f)
 
     # 根据分辨率查找配置文件
     if os.path.exists(config_file):
         with open(config_file, 'r') as f:
-            print("正在从 {} 加载配置文件".format(config_file))
+            print(f"正在从 {config_file} 加载配置文件")
             return json.load(f)
     else:
-        with open('{}/config/default.json'.format(sys.path[0]), 'r') as f:
+        with open(f'{sys.path[0]}/config/default.json', 'r') as f:
             print("Load default config")
             return json.load(f)
 
@@ -47,7 +47,6 @@ def _get_screen_size():
     获取手机屏幕大小
     """
     size_str = adb.get_screen()
-    m = re.search(r'(\d+)x(\d+)', size_str)
-    if m:
-        return "{height}x{width}".format(height=m.group(2), width=m.group(1))
+    if m := re.search(r'(\d+)x(\d+)', size_str):
+        return "{height}x{width}".format(height=m[2], width=m[1])
     return "1920x1080"

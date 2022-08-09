@@ -40,28 +40,27 @@ def p_to_t():
 			if i =='\n':
 				data1.remove('\n')
 		data1=''.join(map(str,data1))
-		
+
 		data2=sub_c(data1[:-8])
 		data.append(data2+data1[-8:])
-		
+
 		name.append(sub_c(line[0]))
 
 		print('完成图片识别\n','言语：\n',data[0],'\n账号名：\n',name[0])
-		
-		
-		
-		
-		
-		
+
+
+
+
+
+
 		run_n=1
-		
+
 		return run_n,data,name
 		
 		
 def sub_c(line):
-		n1=line.replace('\n','')
-		n2=n1.replace(' ','')
-		return n2
+	n1=line.replace('\n','')
+	return n1.replace(' ','')
 
 
 def main():
